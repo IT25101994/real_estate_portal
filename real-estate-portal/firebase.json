@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Property Hub",
+        "supportEmail": "kvvsew7@gmail.com"
+      }
+    }
+  }
+}
