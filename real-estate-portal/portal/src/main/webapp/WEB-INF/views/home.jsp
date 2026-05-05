@@ -53,6 +53,16 @@
         .brand { font-family: 'Marcellus', serif; font-size: 26px; font-weight: bold; color: var(--dark-navy); letter-spacing: 2px; text-decoration: none; }
         .brand span { color: var(--emerald); }
 
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-navy);
+            font-weight: 600;
+            font-size: 13px;
+            transition: color 0.3s;
+            text-transform: uppercase;
+        }
+        .nav-links a:hover { color: var(--emerald); }
+
         .hero-luxury {
             height: 90vh;
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
@@ -220,14 +230,40 @@
 
 <nav class="premium-nav">
     <a href="${pageContext.request.contextPath}/dashboard" class="brand">PROPERTY<span>HUB</span></a>
-    <div class="d-none d-lg-flex gap-4">
-        <a href="${pageContext.request.contextPath}/dashboard" class="text-dark text-decoration-none fw-bold small">HOME</a>
-        <a href="${pageContext.request.contextPath}/properties?action=list" class="text-dark text-decoration-none fw-bold small">PROPERTIES</a>
-        <a href="${pageContext.request.contextPath}/inquiries?action=list" class="text-dark text-decoration-none fw-bold small">INQUIRIES</a>
-        <a href="${pageContext.request.contextPath}/reviews?action=list" class="text-dark text-decoration-none fw-bold small">REVIEWS</a>
-        <a href="${pageContext.request.contextPath}/logout" class="text-danger text-decoration-none fw-bold small">LOGOUT</a>
+    
+    <div class="nav-links d-none d-lg-flex gap-4 align-items-center">
+        <a href="${pageContext.request.contextPath}/dashboard">HOME</a>
+        <a href="${pageContext.request.contextPath}/properties?action=list">PROPERTIES</a>
+        <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
+            <a href="${pageContext.request.contextPath}/reviews?action=list">REVIEWS</a>
+        </c:if>
+
+        <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'SELLER' || sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
+            <a href="${pageContext.request.contextPath}/inquiries?action=list">INQUIRIES</a>
+        </c:if>
+
+        <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
+            <a href="${pageContext.request.contextPath}/admins?action=dashboard" class="text-primary">ADMIN DASHBOARD</a>
+            <a href="${pageContext.request.contextPath}/users?action=list">USERS</a>
+            <a href="${pageContext.request.contextPath}/sellers?action=list">SELLERS</a>
+        </c:if>
+
+        <c:if test="${sessionScope.user != null}">
+            <a href="${pageContext.request.contextPath}/profile" class="text-success">MY PROFILE</a>
+            <a href="${pageContext.request.contextPath}/logout" class="text-danger">LOGOUT</a>
+        </c:if>
+        
+        <c:if test="${sessionScope.user == null}">
+            <a href="${pageContext.request.contextPath}/login" class="text-primary">LOGIN</a>
+        </c:if>
     </div>
-    <button class="btn btn-dark rounded-pill px-4 fw-bold shadow-sm" onclick="window.location.href='${pageContext.request.contextPath}/properties?action=addForm'">Post Ad</button>
+
+    <c:if test="${sessionScope.user != null && sessionScope.user.type != 'BUYER' && sessionScope.user.type != 'buyer'}">
+        <button class="btn btn-dark rounded-pill px-4 fw-bold shadow-sm" onclick="window.location.href='${pageContext.request.contextPath}/properties?action=addForm'">Post Ad</button>
+    </c:if>
+    <c:if test="${sessionScope.user == null}">
+         <button class="btn btn-emerald rounded-pill px-4 fw-bold shadow-sm" style="background: var(--emerald); color: white;" onclick="window.location.href='${pageContext.request.contextPath}/register'">Join Us</button>
+    </c:if>
 </nav>
 
 <section class="hero-luxury">
