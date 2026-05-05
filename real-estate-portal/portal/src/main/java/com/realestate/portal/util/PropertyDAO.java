@@ -23,16 +23,16 @@ public class PropertyDAO {
         }
     }
 
-    public int createProperty(Integer agentId, String title, String location,
+    public int createProperty(Integer sellerId, String title, String location,
                                   double price, String type, int bedrooms,
                                   String status, String description, String imageUrl, String businessType) {
         String sql = "INSERT INTO properties "
-                + "(agent_id, title, location, price, type, bedrooms, status, description, image_url, business_type) "
+                + "(seller_id, title, location, price, type, bedrooms, status, description, image_url, business_type) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            if (agentId != null && agentId > 0) {
-                ps.setInt(1, agentId);
+            if (sellerId != null && sellerId > 0) {
+                ps.setInt(1, sellerId);
             } else {
                 ps.setNull(1, java.sql.Types.INTEGER);
             }
@@ -87,9 +87,9 @@ public class PropertyDAO {
 
     public List<Property> getAllProperties() {
         List<Property> list = new ArrayList<>();
-        String sql = "SELECT p.*, u.name AS agent_name, u.profile_photo AS agent_photo "
+        String sql = "SELECT p.*, u.name AS seller_name, u.profile_photo AS seller_photo "
                 + "FROM properties p "
-                + "LEFT JOIN users u ON p.agent_id = u.id "
+                + "LEFT JOIN users u ON p.seller_id = u.id "
                 + "ORDER BY p.created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -111,9 +111,9 @@ public class PropertyDAO {
         boolean hasStatus  = status  != null && !status.trim().isEmpty();
 
         StringBuilder sql = new StringBuilder(
-                "SELECT p.*, u.name AS agent_name, u.profile_photo AS agent_photo "
+                "SELECT p.*, u.name AS seller_name, u.profile_photo AS seller_photo "
                         + "FROM properties p "
-                        + "LEFT JOIN users u ON p.agent_id = u.id "
+                        + "LEFT JOIN users u ON p.seller_id = u.id "
                         + "WHERE 1=1");
 
         if (hasKeyword) sql.append(" AND (p.title LIKE ? OR p.location LIKE ?)");
@@ -144,9 +144,9 @@ public class PropertyDAO {
     }
 
     public Property getById(int id) {
-        String sql = "SELECT p.*, u.name AS agent_name, u.profile_photo AS agent_photo "
+        String sql = "SELECT p.*, u.name AS seller_name, u.profile_photo AS seller_photo "
                 + "FROM properties p "
-                + "LEFT JOIN users u ON p.agent_id = u.id "
+                + "LEFT JOIN users u ON p.seller_id = u.id "
                 + "WHERE p.id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -216,7 +216,7 @@ public class PropertyDAO {
         }
 
         p.setId(rs.getInt("id"));
-        p.setAgentId(rs.getInt("agent_id"));
+        p.setSellerId(rs.getInt("seller_id"));
         p.setTitle(rs.getString("title"));
         p.setLocation(rs.getString("location"));
         p.setPrice(rs.getDouble("price"));
@@ -231,11 +231,11 @@ public class PropertyDAO {
         } catch (SQLException ignored) {}
 
         try {
-            p.setAgentName(rs.getString("agent_name"));
+            p.setSellerName(rs.getString("seller_name"));
         } catch (SQLException ignored) {}
 
         try {
-            p.setAgentPhoto(rs.getString("agent_photo"));
+            p.setSellerPhoto(rs.getString("seller_photo"));
         } catch (SQLException ignored) {}
 
         return p;

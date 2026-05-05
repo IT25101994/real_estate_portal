@@ -146,14 +146,14 @@ public class PropertyServlet extends HttpServlet {
                 String imageUrl = saveImage(req, "image"); // "image" is the cover field
                 java.util.List<String> gallery = saveGallery(req);
 
-                Integer agentId = "ADMIN".equalsIgnoreCase(user.getType()) ? null : user.getId();
+                Integer sellerId = "ADMIN".equalsIgnoreCase(user.getType()) ? null : user.getId();
                 if (req.getParameter("price") == null || req.getParameter("bedrooms") == null) {
                     resp.sendRedirect(req.getContextPath() + "/properties?action=list&error=invalid_parameters");
                     return;
                 }
 
                 int propertyId = dao.createProperty(
-                        agentId,
+                        sellerId,
                         req.getParameter("title"),
                         req.getParameter("location"),
                         Double.parseDouble(req.getParameter("price")),

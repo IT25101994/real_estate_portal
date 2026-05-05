@@ -3,8 +3,8 @@ package com.realestate.portal.model;
 public class Property {
 
     private int    id;
-    private int    agentId;
-    private String agentName;
+    private int    sellerId;
+    private String sellerName;
     private String title;
     private String location;
     private double price;
@@ -15,20 +15,20 @@ public class Property {
     private String createdAt;
     private String imageUrl;
     private java.util.List<String> galleryImages;
-    private String agentPhoto;
+    private String sellerPhoto;
 
     public Property() {
         this.galleryImages = new java.util.ArrayList<>();
     }
 
-    public String getAgentPhoto()             { return agentPhoto; }
-    public void   setAgentPhoto(String a)     { this.agentPhoto = a; }
+    public String getSellerPhoto()             { return sellerPhoto; }
+    public void   setSellerPhoto(String a)     { this.sellerPhoto = a; }
 
-    public Property(int id, int agentId, String title, String location,
+    public Property(int id, int sellerId, String title, String location,
                     double price, String type, int bedrooms,
                     String status, String description, String createdAt, String imageUrl) {
         this.id          = id;
-        this.agentId     = agentId;
+        this.sellerId     = sellerId;
         this.title       = title;
         this.location    = location;
         this.price       = price;
@@ -43,10 +43,10 @@ public class Property {
 
     public int    getId()                  { return id; }
     public void   setId(int id)            { this.id = id; }
-    public int    getAgentId()             { return agentId; }
-    public void   setAgentId(int a)        { this.agentId = a; }
-    public String getAgentName()           { return agentName; }
-    public void   setAgentName(String a)   { this.agentName = a; }
+    public int    getSellerId()             { return sellerId; }
+    public void   setSellerId(int a)        { this.sellerId = a; }
+    public String getSellerName()           { return sellerName; }
+    public void   setSellerName(String a)   { this.sellerName = a; }
     public String getTitle()               { return title; }
     public void   setTitle(String t)       { this.title = t; }
     public String getLocation()            { return location; }
