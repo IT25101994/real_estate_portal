@@ -65,6 +65,7 @@
     <div class="nav-links d-none d-lg-flex gap-4 align-items-center">
         <a href="${pageContext.request.contextPath}/dashboard">HOME</a>
         <a href="${pageContext.request.contextPath}/properties?action=list">PROPERTIES</a>
+        
         <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
             <a href="${pageContext.request.contextPath}/reviews?action=list">REVIEWS</a>
         </c:if>
@@ -73,14 +74,7 @@
             <a href="${pageContext.request.contextPath}/inquiries?action=list">INQUIRIES</a>
         </c:if>
 
-        <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
-            <a href="${pageContext.request.contextPath}/admins?action=dashboard" class="text-primary">ADMIN DASHBOARD</a>
-            <a href="${pageContext.request.contextPath}/users?action=list">USERS</a>
-            <a href="${pageContext.request.contextPath}/sellers?action=list">SELLERS</a>
-        </c:if>
-
         <c:if test="${sessionScope.user != null}">
-            <a href="${pageContext.request.contextPath}/profile" class="text-success">MY PROFILE</a>
             <a href="${pageContext.request.contextPath}/logout" class="text-danger">LOGOUT</a>
         </c:if>
         
