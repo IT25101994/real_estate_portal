@@ -20,7 +20,7 @@ public class SellerDAO {
     }
 
     public boolean createSeller(int userId, String agencyName, String specialization, String tier, double rating) {
-        String sql = "INSERT INTO sellers (user_id, agency_name, specialization, tier, rating) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sellers (seller_id, seller_name, specialization, tier, rating) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId); ps.setString(2, agencyName);
@@ -32,7 +32,7 @@ public class SellerDAO {
     public List<Seller> getAllSellers() {
         List<Seller> list = new ArrayList<>();
         String sql = "SELECT a.*, u.name AS user_name FROM sellers a "
-                   + "LEFT JOIN users u ON a.user_id = u.id ORDER BY a.created_at DESC";
+                   + "LEFT JOIN users u ON a.seller_id = u.id ORDER BY a.created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -44,8 +44,8 @@ public class SellerDAO {
     public List<Seller> searchSellers(String keyword) {
         List<Seller> list = new ArrayList<>();
         String sql = "SELECT a.*, u.name AS user_name FROM sellers a "
-                   + "LEFT JOIN users u ON a.user_id = u.id "
-                   + "WHERE u.name LIKE ? OR a.agency_name LIKE ? OR a.specialization LIKE ? "
+                   + "LEFT JOIN users u ON a.seller_id = u.id "
+                   + "WHERE u.name LIKE ? OR a.seller_name LIKE ? OR a.specialization LIKE ? "
                    + "ORDER BY a.created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -58,7 +58,7 @@ public class SellerDAO {
 
     public Seller getById(int id) {
         String sql = "SELECT a.*, u.name AS user_name FROM sellers a "
-                   + "LEFT JOIN users u ON a.user_id = u.id WHERE a.id = ?";
+                   + "LEFT JOIN users u ON a.seller_id = u.id WHERE a.id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -68,7 +68,7 @@ public class SellerDAO {
     }
 
     public boolean updateSeller(int id, String agencyName, String specialization, String tier) {
-        String sql = "UPDATE sellers SET agency_name=?, specialization=?, tier=? WHERE id=?";
+        String sql = "UPDATE sellers SET seller_name=?, specialization=?, tier=? WHERE id=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, agencyName); ps.setString(2, specialization);
@@ -89,9 +89,9 @@ public class SellerDAO {
     private Seller mapRow(ResultSet rs) throws SQLException {
         Seller a = new Seller();
         a.setId(rs.getInt("id"));
-        a.setUserId(rs.getInt("user_id"));
+        a.setUserId(rs.getInt("seller_id"));
         try { a.setUserName(rs.getString("user_name")); } catch (SQLException ignored) {}
-        a.setAgencyName(rs.getString("agency_name"));
+        a.setAgencyName(rs.getString("seller_name"));
         a.setSpecialization(rs.getString("specialization"));
         a.setTier(rs.getString("tier"));
         try { a.setRating(rs.getDouble("rating")); } catch (SQLException ignored) {}

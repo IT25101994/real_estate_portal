@@ -6,11 +6,9 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String URL =
-            "jdbc:mysql://gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com:4000/real_estate_db"
-                    + "?useSSL=true&sslMode=VERIFY_IDENTITY";
-    private static final String USERNAME = "2yEpC3jf54XfQAY.root";
-    private static final String PASSWORD = "c9QYSIQWpSGorMND";
+    private static final String URL = "jdbc:mysql://localhost:3306/real_estate_db?useSSL=false&allowPublicKeyRetrieval=true";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "Vidusew123@#";
 
     public static Connection getConnection() {
         try {
