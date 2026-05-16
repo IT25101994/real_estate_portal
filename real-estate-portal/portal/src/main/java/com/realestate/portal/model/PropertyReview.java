@@ -1,10 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 6 — PropertyReview
- * OOP: Inheritance  — extends Review
- * OOP: Polymorphism — @Override getTargetLabel()
- */
 public class PropertyReview extends Review {
 
     private int locationRating; // 1–5 extra rating for location

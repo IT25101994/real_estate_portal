@@ -1,9 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 4 — ModeratorAdmin
- * Restricted access — cannot delete users or manage other admins.
- */
 public class ModeratorAdmin extends Admin {
 
     public ModeratorAdmin() {

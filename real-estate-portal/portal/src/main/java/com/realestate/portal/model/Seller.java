@@ -1,9 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 5 — Seller (Base Class)
- * OOP: Polymorphism — getMaxListings() and getTierBadge() overridden in subclasses
- */
 public class Seller {
     private int    id;
     private int    userId;

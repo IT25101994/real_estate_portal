@@ -20,6 +20,13 @@ public class PropertyServlet extends HttpServlet {
 
     private final PropertyDAO dao = new PropertyDAO();
 
+    private boolean canManageProperty(User user, Property property) {
+        if (user == null || property == null) return false;
+        if ("ADMIN".equalsIgnoreCase(user.getType())) return true;
+        return user.getId() == property.getSellerId();
+    }
+
+
     private String saveImage(HttpServletRequest req, String fieldName) throws Exception {
         try {
             Part part = req.getPart(fieldName);
@@ -102,6 +109,13 @@ public class PropertyServlet extends HttpServlet {
                     }
                     int id = Integer.parseInt(req.getParameter("id"));
                     Property property = dao.getById(id);
+                    User user = (User) req.getSession().getAttribute("user");
+                    
+                    if (!canManageProperty(user, property)) {
+                        resp.sendRedirect(req.getContextPath() + "/properties?action=list&error=access_denied");
+                        return;
+                    }
+                    
                     req.setAttribute("property", property);
                     req.getRequestDispatcher("/WEB-INF/views/edit-property.jsp").forward(req, resp);
                     break;
@@ -174,12 +188,16 @@ public class PropertyServlet extends HttpServlet {
 
             } else if ("update".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
+                Property existing = dao.getById(id);
+                
+                if (!canManageProperty(user, existing)) {
+                    resp.sendRedirect(req.getContextPath() + "/properties?action=list&error=access_denied");
+                    return;
+                }
+
                 String imageUrl = saveImage(req, "image");
-                if (imageUrl == null) {
-                    Property existing = dao.getById(id);
-                    if (existing != null) {
-                        imageUrl = existing.getImageUrl();
-                    }
+                if (imageUrl == null && existing != null) {
+                    imageUrl = existing.getImageUrl();
                 }
                 
                 dao.updateProperty(
@@ -198,7 +216,15 @@ public class PropertyServlet extends HttpServlet {
                         + "/properties?action=list&msg=updated");
 
             } else if ("delete".equals(action)) {
-                dao.deleteProperty(Integer.parseInt(req.getParameter("id")));
+                int id = Integer.parseInt(req.getParameter("id"));
+                Property existing = dao.getById(id);
+                
+                if (!canManageProperty(user, existing)) {
+                    resp.sendRedirect(req.getContextPath() + "/properties?action=list&error=access_denied");
+                    return;
+                }
+
+                dao.deleteProperty(id);
                 resp.sendRedirect(req.getContextPath()
                         + "/properties?action=list&msg=deleted");
             }

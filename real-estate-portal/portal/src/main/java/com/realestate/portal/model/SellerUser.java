@@ -1,10 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 1 — SellerUser (Subclass)
- * OOP: Inheritance   — extends User
- * OOP: Polymorphism  — @Override getWelcomeMessage() returns seller-specific text
- */
 public class SellerUser extends User {
 
     private String licenseNumber;

@@ -1,9 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 5 — JuniorSeller
- * getMaxListings() returns only 5. Has a supervisorId.
- */
 public class JuniorSeller extends Seller {
 
     private int supervisorId;

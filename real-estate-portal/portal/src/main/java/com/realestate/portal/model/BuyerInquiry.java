@@ -1,10 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 3 — BuyerInquiry (Subclass)
- * OOP: Inheritance  — extends Inquiry
- * OOP: Polymorphism — @Override getStatusLabel() with urgency
- */
 public class BuyerInquiry extends Inquiry {
 
     private String urgencyLevel; // "low", "medium", "high"

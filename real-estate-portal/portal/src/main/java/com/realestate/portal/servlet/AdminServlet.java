@@ -13,9 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * MEMBER 4 — AdminServlet
- */
 @WebServlet("/admins")
 public class AdminServlet extends HttpServlet {
 

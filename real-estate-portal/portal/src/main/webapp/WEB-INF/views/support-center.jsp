@@ -103,7 +103,7 @@
                         How do I list a property for sale in Sri Lanka?
                     </div>
                     <div class="faq-answer">
-                        If you are registered as an <strong>Seller</strong>, simply click the "Post Ad" button in the top navigation. You will need to provide the property title, location (e.g., Colombo 07), price in <strong>LKR</strong>, and upload at least one feature image.
+                        If you are registered as a <strong>Seller</strong>, simply click the "Post Ad" button in the top navigation. You will need to provide the property title, location (e.g., Colombo 07), price in <strong>LKR</strong>, and upload at least one feature image.
                     </div>
                 </div>
 

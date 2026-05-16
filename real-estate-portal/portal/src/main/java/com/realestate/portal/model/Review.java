@@ -1,9 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 6 — Review (Base Class)
- * OOP: Polymorphism — getTargetLabel() overridden in subclasses
- */
 public class Review {
     private int    id;
     private int    userId;
@@ -36,7 +32,6 @@ public class Review {
     public String getCreatedAt()         { return createdAt; }
     public void   setCreatedAt(String c) { this.createdAt = c; }
 
-    /** Builds star string — e.g. rating=4 → "★★★★☆" */
     public String getStars() {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= 5; i++) sb.append(i <= rating ? "★" : "☆");

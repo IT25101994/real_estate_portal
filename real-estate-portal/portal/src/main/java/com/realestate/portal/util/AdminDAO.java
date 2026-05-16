@@ -5,9 +5,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * MEMBER 4 — AdminDAO
- */
 public class AdminDAO {
     
     public AdminDAO() {

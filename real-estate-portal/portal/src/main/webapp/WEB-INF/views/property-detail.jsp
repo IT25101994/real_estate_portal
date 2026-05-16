@@ -178,7 +178,7 @@
                     <div class="bg-white bg-opacity-10 p-2 rounded-circle border border-white border-opacity-10" style="width: 40px; height:40px;"><i class="bi bi-whatsapp"></i></div>
                 </div>
 
-                <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'SELLER' || sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
+                <c:if test="${sessionScope.user != null && (sessionScope.user.id == property.sellerId || sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
                     <div class="mt-5 pt-4 border-top border-white border-opacity-10">
                         <p class="small text-white-50 mb-3 text-uppercase fw-bold">Management Tools</p>
                         <div class="d-flex gap-2">

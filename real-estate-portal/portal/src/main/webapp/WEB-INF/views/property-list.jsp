@@ -130,7 +130,7 @@
 
                         <div class="d-grid gap-2">
                             <a href="${pageContext.request.contextPath}/properties?action=detail&id=${prop.id}" class="btn btn-dark rounded-pill py-2 fw-bold">View Details</a>
-                            <c:if test="${sessionScope.user != null && (sessionScope.user.type == 'SELLER' || sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
+                            <c:if test="${sessionScope.user != null && (sessionScope.user.id == prop.sellerId || sessionScope.user.type == 'ADMIN' || sessionScope.user.type == 'admin')}">
                                 <div class="d-flex gap-2">
                                     <a href="${pageContext.request.contextPath}/properties?action=edit&id=${prop.id}" class="btn btn-sm btn-outline-warning rounded-pill flex-fill"><i class="bi bi-pencil-square"></i> Edit</a>
                                     <form action="${pageContext.request.contextPath}/properties" method="post" class="d-inline flex-fill">

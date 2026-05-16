@@ -1,10 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 1 — User (Base Class)
- * OOP: Encapsulation — all fields are private, accessed via getters/setters
- * OOP: Polymorphism  — getWelcomeMessage() is overridden in subclasses
- */
 public class User {
 
     // Encapsulation: private fields
@@ -19,7 +14,7 @@ public class User {
     private String createdAt;
     private String profilePhoto; // URL/path to the profile image
 
-    // ── Constructors ──────────────────────────────────────────────────────
+    // Constructors
     public User() {}
 
     public User(int id, String name, String email, String password, String type, String phone, String address, String bio, String createdAt) {
@@ -34,7 +29,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // ── Getters & Setters (Encapsulation) ─────────────────────────────────
+    // Getters & Setters
     public int    getId()        { return id; }
     public void   setId(int id)  { this.id = id; }
 
@@ -65,7 +60,7 @@ public class User {
     public String getProfilePhoto()                     { return profilePhoto; }
     public void   setProfilePhoto(String profilePhoto)  { this.profilePhoto = profilePhoto; }
 
-    // ── Polymorphic method — overridden in subclasses ─────────────────────
+    // Polymorphic method — overridden in subclasses
     public String getWelcomeMessage() {
         return "Welcome, " + name + "!";
     }

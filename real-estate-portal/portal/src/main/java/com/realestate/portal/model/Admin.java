@@ -1,9 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 4 — Admin (Base Class)
- * OOP: Polymorphism — canDeleteUsers() and canManageAdmins() overridden in subclasses
- */
 public class Admin {
     private int    id;
     private String name;

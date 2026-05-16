@@ -1,8 +1,5 @@
 package com.realestate.portal.model;
 
-/**
- * MEMBER 3 — Inquiry (Base Class)
- */
 public class Inquiry {
     private int    id;
     private int    buyerId;

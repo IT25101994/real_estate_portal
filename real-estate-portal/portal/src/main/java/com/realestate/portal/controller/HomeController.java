@@ -1,21 +1,42 @@
 package com.realestate.portal.controller;
 
+// Import User model class
 import com.realestate.portal.model.User;
+
+// Import class for user database operations
 import com.realestate.portal.util.UserDAO;
+
+// Import class for property database operations
 import com.realestate.portal.util.PropertyDAO;
+
+//Marks class as a web controller and Handles web requessts and send pagess(JSP/HTML) back to the user
 import org.springframework.stereotype.Controller;
+
+//send data from java to HTMl/JSP page
 import org.springframework.ui.Model;
+
+//maps HTTP GET(read) requests
 import org.springframework.web.bind.annotation.GetMapping;
+
+//maps HTTP POST(send) requests
 import org.springframework.web.bind.annotation.PostMapping;
+
+//Get values from form or URL.Take input from user request
 import org.springframework.web.bind.annotation.RequestParam;
+
+//Returns data directly instead of a webpage.
 import org.springframework.web.bind.annotation.ResponseBody;
 
+//used to manage user session data in a web application
 import jakarta.servlet.http.HttpSession;
 
+//tells Spring this class handles web pages/requests
 @Controller
 public class HomeController {
 
+    //handle user database operations in the class
     private final UserDAO userDAO = new UserDAO();
+    //handle property database operations in the class
     private final PropertyDAO propertyDAO = new PropertyDAO();
 
     @GetMapping("/")
