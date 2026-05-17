@@ -1,11 +1,12 @@
 package com.realestate.portal.model;
 
+// Inheritance
 public class BuyerUser extends User {
 
-    // Extra field specific to buyers
+    // Information hiding
     private String preferredLocation;
 
-    // Constructors
+    // Constructor
     public BuyerUser() {
         super();
     }
@@ -16,12 +17,12 @@ public class BuyerUser extends User {
         this.preferredLocation = preferredLocation;
     }
 
-    // Getter & Setter
+    // Encapsulation
     public String getPreferredLocation()                        { return preferredLocation; }
     public void   setPreferredLocation(String preferredLocation){ this.preferredLocation = preferredLocation; }
 
-    // Polymorphism: different welcome message for buyers
     @Override
+    // Polymorphism
     public String getWelcomeMessage() {
         return "Welcome Buyer, " + getName() + "! Browse available properties below.";
     }

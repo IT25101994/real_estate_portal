@@ -1,19 +1,21 @@
 package com.realestate.portal.model;
 
 public class Inquiry {
+    // Information hiding
     private int    id;
     private int    buyerId;
-    private String buyerName;    // from JOIN
+    private String buyerName;
     private int    propertyId;
-    private String propertyTitle; // from JOIN
+    private String propertyTitle;
     private String message;
     private String response;
-    private String status;       // "pending", "responded", "closed"
+    private String status;
     private String createdAt;
 
+    // Constructor
     public Inquiry() {}
 
-    // Getters & Setters
+    // Encapsulation
     public int    getId()                     { return id; }
     public void   setId(int id)               { this.id = id; }
     public int    getBuyerId()                { return buyerId; }
@@ -33,7 +35,7 @@ public class Inquiry {
     public String getCreatedAt()              { return createdAt; }
     public void   setCreatedAt(String c)      { this.createdAt = c; }
 
-    // Polymorphic method
+    // Polymorphism
     public String getStatusLabel() {
         return switch (status == null ? "pending" : status) {
             case "responded" -> "Responded";

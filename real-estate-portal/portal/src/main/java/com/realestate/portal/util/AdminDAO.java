@@ -5,8 +5,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Abstraction
 public class AdminDAO {
     
+    // Constructor
     public AdminDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -87,6 +89,7 @@ public class AdminDAO {
     }
 
     private Admin mapRow(ResultSet rs) throws SQLException {
+        // Polymorphism
         String role = rs.getString("role");
         Admin a;
         if ("superadmin".equalsIgnoreCase(role)) {

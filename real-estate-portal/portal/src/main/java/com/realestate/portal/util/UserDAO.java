@@ -5,8 +5,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Abstraction
 public class UserDAO {
 
+    // Constructor
     public UserDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -17,7 +19,6 @@ public class UserDAO {
         } catch (Exception e) {}
     }
 
-    // ── CREATE ─────────────────────────────────────────────────────────────
     public boolean createUser(String name, String email, String password, String type) {
         String sql = "INSERT INTO users (name, email, password, type) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -33,7 +34,6 @@ public class UserDAO {
         }
     }
 
-    // ── READ ALL ───────────────────────────────────────────────────────────
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY created_at DESC";
@@ -49,7 +49,6 @@ public class UserDAO {
         return users;
     }
 
-    // ── READ BY ID ─────────────────────────────────────────────────────────
     public User getUserById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -64,7 +63,6 @@ public class UserDAO {
         return null;
     }
 
-    // ── READ BY EMAIL ──────────────────────────────────────────────────────
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -79,7 +77,6 @@ public class UserDAO {
         return null;
     }
 
-    // ── READ BY TYPE ───────────────────────────────────────────────────────
     public List<User> getUsersByType(String type) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE LOWER(type) = LOWER(?) ORDER BY created_at DESC";
@@ -95,7 +92,6 @@ public class UserDAO {
         return users;
     }
 
-    // ── SEARCH ─────────────────────────────────────────────────────────────
     public List<User> searchUsers(String keyword) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY created_at DESC";
@@ -113,7 +109,6 @@ public class UserDAO {
         return users;
     }
 
-    // ── UPDATE ─────────────────────────────────────────────────────────────
     public boolean updateUser(int id, String name, String email, String password, String type) {
         try (Connection conn = DBConnection.getConnection()) {
             if (password != null && !password.isBlank()) {
@@ -168,7 +163,6 @@ public class UserDAO {
         }
     }
 
-    // ── DELETE ─────────────────────────────────────────────────────────────
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -181,7 +175,6 @@ public class UserDAO {
         }
     }
 
-    // ── Helper ─────────────────────────────────────────────────────────────
     private User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getInt("id"));

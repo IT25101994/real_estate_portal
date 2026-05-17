@@ -1,15 +1,19 @@
 package com.realestate.portal.model;
 
 public class Admin {
+    // Information hiding
     private int    id;
     private String name;
     private String email;
     private String password;
-    private String role;       // "superadmin" or "moderator"
+    private String role;
     private String createdAt;
+    private String profilePhoto;
 
+    // Constructor
     public Admin() {}
 
+    // Encapsulation
     public int    getId()               { return id; }
     public void   setId(int id)         { this.id = id; }
     public String getName()             { return name; }
@@ -22,12 +26,10 @@ public class Admin {
     public void   setRole(String r)     { this.role = r; }
     public String getCreatedAt()        { return createdAt; }
     public void   setCreatedAt(String c){ this.createdAt = c; }
-
-    private String profilePhoto;
     public String getProfilePhoto()             { return profilePhoto; }
     public void   setProfilePhoto(String p)     { this.profilePhoto = p; }
 
-    // Polymorphic permission methods — overridden in subclasses
+    // Polymorphism
     public boolean isCanDeleteUsers()   { return false; }
     public boolean isCanManageAdmins()  { return false; }
 

@@ -2,7 +2,7 @@ package com.realestate.portal.model;
 
 public class User {
 
-    // Encapsulation: private fields
+    // Information hiding
     private int    id;
     private String name;
     private String email;
@@ -14,7 +14,7 @@ public class User {
     private String createdAt;
     private String profilePhoto; // URL/path to the profile image
 
-    // Constructors
+    // Constructor
     public User() {}
 
     public User(int id, String name, String email, String password, String type, String phone, String address, String bio, String createdAt) {
@@ -29,7 +29,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // Getters & Setters
+    // Encapsulation
     public int    getId()        { return id; }
     public void   setId(int id)  { this.id = id; }
 
@@ -60,7 +60,7 @@ public class User {
     public String getProfilePhoto()                     { return profilePhoto; }
     public void   setProfilePhoto(String profilePhoto)  { this.profilePhoto = profilePhoto; }
 
-    // Polymorphic method — overridden in subclasses
+    // Polymorphism
     public String getWelcomeMessage() {
         return "Welcome, " + name + "!";
     }

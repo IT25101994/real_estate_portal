@@ -5,11 +5,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * MEMBER 5 — SellerDAO
- */
+// Abstraction
 public class SellerDAO {
 
+    // Constructor
     public SellerDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {

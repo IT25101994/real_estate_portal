@@ -12,7 +12,6 @@ public class UserPageController {
 
     private final UserDAO userDAO = new UserDAO();
 
-    // ── GET ────────────────────────────────────────────────────────────────
     @GetMapping
     public String listUsers(
             @RequestParam(value = "action", required = false) String action,
@@ -41,7 +40,6 @@ public class UserPageController {
         return "user-list";
     }
 
-    // ── POST ───────────────────────────────────────────────────────────────
     @PostMapping
     public String handlePost(
             @RequestParam(value = "action") String action,
@@ -53,7 +51,6 @@ public class UserPageController {
 
         switch (action) {
             case "update":
-                // ✅ now passes password and type too
                 userDAO.updateUser(id, name, email, password, type);
                 return "redirect:/users?msg=updated";
 
@@ -66,7 +63,6 @@ public class UserPageController {
         }
     }
 
-    // ── POST: Register ─────────────────────────────────────────────────────
     @PostMapping("/register")
     public String createUser(
             @RequestParam("name") String name,
@@ -78,12 +74,9 @@ public class UserPageController {
         boolean success = userDAO.createUser(name, email, password, type);
         
         if (success) {
-            // Check if it's a public registration (no one logged in) or an admin creating a user
             if (session.getAttribute("user") == null) {
-                // Public registration: Show success message and require manual login
                 return "redirect:/login?msg=registered";
             } else {
-                // An admin creating another user from the dashboard
                 return "redirect:/users?msg=registered";
             }
         } else {

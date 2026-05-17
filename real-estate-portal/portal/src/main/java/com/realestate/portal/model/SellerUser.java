@@ -1,9 +1,12 @@
 package com.realestate.portal.model;
 
+// Inheritance
 public class SellerUser extends User {
 
+    // Information hiding
     private String licenseNumber;
 
+    // Constructor
     public SellerUser() {
         super();
     }
@@ -14,10 +17,12 @@ public class SellerUser extends User {
         this.licenseNumber = licenseNumber;
     }
 
+    // Encapsulation
     public String getLicenseNumber()                      { return licenseNumber; }
     public void   setLicenseNumber(String licenseNumber)  { this.licenseNumber = licenseNumber; }
 
     @Override
+    // Polymorphism
     public String getWelcomeMessage() {
         return "Welcome Seller, " + getName() + "! Manage your property listings here.";
     }

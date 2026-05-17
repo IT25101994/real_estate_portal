@@ -1,6 +1,7 @@
 package com.realestate.portal.model;
 
 public class Review {
+    // Information hiding
     private int    id;
     private int    userId;
     private String userName;     // from JOIN
@@ -11,8 +12,10 @@ public class Review {
     private String createdAt;
     private String userPhoto;    // from JOIN
 
+    // Constructor
     public Review() {}
 
+    // Encapsulation
     public int    getId()                { return id; }
     public void   setId(int id)          { this.id = id; }
     public int    getUserId()            { return userId; }
@@ -38,7 +41,7 @@ public class Review {
         return sb.toString();
     }
 
-    // Polymorphic method — overridden in subclasses
+    // Polymorphism
     public String getTargetLabel() {
         return "Target #" + targetId;
     }

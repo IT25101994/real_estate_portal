@@ -1,6 +1,7 @@
 package com.realestate.portal.model;
 
 public class Seller {
+    // Information hiding
     private int    id;
     private int    userId;
     private String userName;      // from JOIN with users
@@ -10,8 +11,10 @@ public class Seller {
     private double rating;
     private String createdAt;
 
+    // Constructor
     public Seller() {}
 
+    // Encapsulation
     public int    getId()                { return id; }
     public void   setId(int id)          { this.id = id; }
     public int    getUserId()            { return userId; }
@@ -29,7 +32,7 @@ public class Seller {
     public String getCreatedAt()         { return createdAt; }
     public void   setCreatedAt(String c) { this.createdAt = c; }
 
-    // Polymorphic methods — overridden in subclasses
+    // Polymorphism
     public int getMaxListings() { return 10; }  // default
     public String getTierBadge() { return "bg-secondary"; }
 }

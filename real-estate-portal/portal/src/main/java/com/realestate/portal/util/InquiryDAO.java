@@ -5,9 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * MEMBER 3 — InquiryDAO
- */
+// Abstraction
 public class InquiryDAO {
 
     public boolean createInquiry(int buyerId, int propertyId, String message) {

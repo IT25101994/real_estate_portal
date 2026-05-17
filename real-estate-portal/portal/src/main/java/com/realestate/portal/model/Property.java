@@ -2,6 +2,7 @@ package com.realestate.portal.model;
 
 public class Property {
 
+    // Information hiding
     private int    id;
     private int    sellerId;
     private String sellerName;
@@ -17,10 +18,12 @@ public class Property {
     private java.util.List<String> galleryImages;
     private String sellerPhoto;
 
+    // Constructor
     public Property() {
         this.galleryImages = new java.util.ArrayList<>();
     }
 
+    // Encapsulation
     public String getSellerPhoto()             { return sellerPhoto; }
     public void   setSellerPhoto(String a)     { this.sellerPhoto = a; }
 

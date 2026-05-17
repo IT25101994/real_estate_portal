@@ -12,8 +12,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+// Abstraction
 public class PropertyDAO {
 
+    // Constructor
     public PropertyDAO() {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
@@ -202,6 +204,7 @@ public class PropertyDAO {
     }
 
     private Property mapRow(ResultSet rs) throws SQLException {
+        // Polymorphism
         String type = rs.getString("type");
 
         Property p;
