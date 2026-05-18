@@ -21,8 +21,21 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) req.getSession().getAttribute("admin");
+        if (loggedInAdmin == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
         String action = req.getParameter("action");
         if (action == null) action = "dashboard";
+
+        // Only super admin can manage admins (actions: register, edit, delete)
+        if (("register".equals(action) || "edit".equals(action) || "delete".equals(action)) 
+                && !loggedInAdmin.isCanManageAdmins()) {
+            resp.sendRedirect(req.getContextPath() + "/admins?action=dashboard&error=unauthorized");
+            return;
+        }
 
         switch (action) {
             case "dashboard" -> {
@@ -31,7 +44,6 @@ public class AdminServlet extends HttpServlet {
                 req.setAttribute("inquiryCount",  dao.countTable("inquiries"));
                 req.setAttribute("reviewCount",   dao.countTable("reviews"));
                 req.setAttribute("sellerCount",    dao.countTable("sellers"));
-                
                 
                 PropertyDAO propDao = new PropertyDAO();
                 req.setAttribute("recentProperties", propDao.getAllProperties());
@@ -97,18 +109,59 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) req.getSession().getAttribute("admin");
+        if (loggedInAdmin == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        // Only super admin can manage admins
+        if (!loggedInAdmin.isCanManageAdmins()) {
+            resp.sendRedirect(req.getContextPath() + "/admins?action=dashboard&error=unauthorized");
+            return;
+        }
+
         String action = req.getParameter("action");
 
         if ("register".equals(action)) {
-            dao.createAdmin(req.getParameter("name"), req.getParameter("email"),
-                            req.getParameter("password"), req.getParameter("role"));
-            resp.sendRedirect(req.getContextPath() + "/admins?action=list&msg=created");
+            String name = req.getParameter("name");
+            String email = req.getParameter("email");
+            String password = req.getParameter("password");
+            String role = req.getParameter("role");
+
+            // Verify email uniqueness before calling create
+            if (dao.findByEmail(email) != null) {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=register&error=duplicate_email&name=" 
+                        + java.net.URLEncoder.encode(name, "UTF-8") + "&role=" + role);
+                return;
+            }
+
+            boolean success = dao.createAdmin(name, email, password, role);
+            if (success) {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=list&msg=created");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=register&error=db_error");
+            }
 
         } else if ("update".equals(action)) {
-            dao.updateAdmin(Integer.parseInt(req.getParameter("id")),
-                            req.getParameter("name"), req.getParameter("email"),
-                            req.getParameter("role"));
-            resp.sendRedirect(req.getContextPath() + "/admins?action=list&msg=updated");
+            int id = Integer.parseInt(req.getParameter("id"));
+            String name = req.getParameter("name");
+            String email = req.getParameter("email");
+            String role = req.getParameter("role");
+
+            // Verify email uniqueness for editing admins
+            com.realestate.portal.model.Admin existing = dao.findByEmail(email);
+            if (existing != null && existing.getId() != id) {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=edit&id=" + id + "&error=duplicate_email");
+                return;
+            }
+
+            boolean success = dao.updateAdmin(id, name, email, role);
+            if (success) {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=list&msg=updated");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/admins?action=edit&id=" + id + "&error=db_error");
+            }
 
         } else if ("delete".equals(action)) {
             dao.deleteAdmin(Integer.parseInt(req.getParameter("id")));

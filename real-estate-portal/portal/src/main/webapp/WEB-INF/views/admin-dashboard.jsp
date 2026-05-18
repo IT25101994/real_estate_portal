@@ -69,19 +69,43 @@
                 <p class="opacity-75 mb-0">Platform Governance & Real-Time Performance Metrics</p>
             </div>
             <div class="col-md-4 text-md-end mt-4 mt-md-0">
-                <div class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-4 py-2">
-                    <div class="admin-avatar-small me-3" style="background: var(--emerald); color: white;">A</div>
-                    <div class="text-start">
-                        <div class="fw-bold small">System Administrator</div>
-                        <div class="small opacity-50">v2.4.0 Patch Active</div>
+                <a href="${pageContext.request.contextPath}/admins?action=list" class="d-inline-flex align-items-center bg-white bg-opacity-10 rounded-pill px-4 py-2 text-white text-decoration-none" style="cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid rgba(255,255,255,0.15);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.25)';" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)';">
+                    <div class="admin-avatar-small me-3" style="background: var(--emerald); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; width: 35px; height: 35px; border-radius: 50%;">
+                        <c:choose>
+                            <c:when test="${sessionScope.admin != null && not empty sessionScope.admin.name}">
+                                ${sessionScope.admin.name.substring(0,1).toUpperCase()}
+                            </c:when>
+                            <c:otherwise>A</c:otherwise>
+                        </c:choose>
                     </div>
-                </div>
+                    <div class="text-start">
+                        <div class="fw-bold small">
+                            <c:choose>
+                                <c:when test="${sessionScope.admin != null}">${sessionScope.admin.name}</c:when>
+                                <c:otherwise>System Administrator</c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="small opacity-75">
+                            <c:choose>
+                                <c:when test="${sessionScope.admin != null}">${sessionScope.admin.role}</c:when>
+                                <c:otherwise>Admin</c:otherwise>
+                            </c:choose>
+                            | v2.4.0 Active
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container" style="margin-top: -50px; position: relative; z-index: 10;">
+    <c:if test="${param.error == 'unauthorized'}">
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Access Denied: Only Super Administrators are authorized to manage administrators.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
     <!-- Quick Stats -->
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6">
@@ -213,7 +237,9 @@
         </div>
         <div class="col-lg-5">
             <div class="dashboard-card">
-                <h5 class="fw-bold mb-4">Platform Oversight</h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold m-0">Platform Oversight</h5>
+                </div>
                 <div class="list-group list-group-flush">
                     <c:forEach var="admin" items="${recentAdmins}" end="4">
                         <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between border-0 border-bottom">

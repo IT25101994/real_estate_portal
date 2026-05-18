@@ -18,7 +18,13 @@ public class UserPageController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "msg", required = false) String msg,
+            jakarta.servlet.http.HttpSession session,
             Model model) {
+
+        com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) session.getAttribute("admin");
+        if (loggedInAdmin == null) {
+            return "redirect:/login";
+        }
 
         if ("registerForm".equals(action)) {
             return "register";
@@ -47,7 +53,13 @@ public class UserPageController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "type", required = false) String type) {
+            @RequestParam(value = "type", required = false) String type,
+            jakarta.servlet.http.HttpSession session) {
+
+        com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) session.getAttribute("admin");
+        if (loggedInAdmin == null) {
+            return "redirect:/login";
+        }
 
         switch (action) {
             case "update":
@@ -55,6 +67,9 @@ public class UserPageController {
                 return "redirect:/users?msg=updated";
 
             case "delete":
+                if (!loggedInAdmin.isCanDeleteUsers()) {
+                    return "redirect:/users?msg=error_unauthorized";
+                }
                 userDAO.deleteUser(id);
                 return "redirect:/users?msg=deleted";
 
@@ -71,16 +86,29 @@ public class UserPageController {
             @RequestParam("type") String type,
             jakarta.servlet.http.HttpSession session) {
 
+        User loggedInUser = (User) session.getAttribute("user");
+        com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) session.getAttribute("admin");
+
+        if (loggedInAdmin == null && loggedInUser == null) {
+            // Guest registering from the welcome page
+            if (!"BUYER".equalsIgnoreCase(type) && !"SELLER".equalsIgnoreCase(type)) {
+                return "redirect:/register?error=invalid_role";
+            }
+        } else if (loggedInAdmin == null) {
+            // Logged in non-admin trying to post register requests
+            return "redirect:/dashboard";
+        }
+
         boolean success = userDAO.createUser(name, email, password, type);
         
         if (success) {
-            if (session.getAttribute("user") == null) {
+            if (session.getAttribute("user") == null && session.getAttribute("admin") == null) {
                 return "redirect:/login?msg=registered";
             } else {
                 return "redirect:/users?msg=registered";
             }
         } else {
-             return session.getAttribute("user") == null 
+             return (session.getAttribute("user") == null && session.getAttribute("admin") == null)
                 ? "redirect:/users?action=registerForm&msg=error" 
                 : "redirect:/users?msg=error";
         }

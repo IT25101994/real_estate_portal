@@ -46,7 +46,9 @@
     <div class="management-card">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold m-0">System Administrators</h4>
-            <a href="${pageContext.request.contextPath}/admins?action=register" class="btn btn-premium btn-sm">ADD NEW ADMIN</a>
+            <c:if test="${sessionScope.admin.canManageAdmins}">
+                <a href="${pageContext.request.contextPath}/admins?action=register" class="btn btn-premium btn-sm">ADD NEW ADMIN</a>
+            </c:if>
         </div>
 
         <div class="table-responsive">
@@ -92,15 +94,19 @@
                                 </div>
                             </td>
                             <td class="text-end">
-                                <form action="${pageContext.request.contextPath}/admins" method="post" class="d-inline">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="${admin.id}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" 
-                                            onclick="return confirm('Revoke admin privileges?')" 
-                                            <c:if test="${sessionScope.user.type != 'ADMIN' && sessionScope.user.type != 'admin'}">disabled</c:if>>
-                                        Delete
-                                    </button>
-                                </form>
+                                <c:if test="${sessionScope.admin.canManageAdmins}">
+                                    <a href="${pageContext.request.contextPath}/admins?action=edit&id=${admin.id}" class="btn btn-sm btn-outline-warning rounded-pill px-3 me-1">Edit</a>
+                                    <form action="${pageContext.request.contextPath}/admins" method="post" class="d-inline">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="${admin.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Revoke admin privileges?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </c:if>
+                                <c:if test="${!sessionScope.admin.canManageAdmins}">
+                                    <span class="text-muted small italic">No Privileges</span>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

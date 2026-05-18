@@ -69,7 +69,21 @@ public class ProfileController {
 
         if ("ADMIN".equalsIgnoreCase(loggedInUser.getType()) || "admin".equalsIgnoreCase(loggedInUser.getType())) {
             com.realestate.portal.util.AdminDAO adminDAO = new com.realestate.portal.util.AdminDAO();
-            adminDAO.updateAdmin(id, name, email, "superadmin".equals(loggedInUser.getType()) ? "superadmin" : "moderator");
+            com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) session.getAttribute("admin");
+            String role = (loggedInAdmin != null) ? loggedInAdmin.getRole() : "moderator";
+            adminDAO.updateAdmin(id, name, email, role);
+            
+            // Refresh session attributes to reflect the updated details instantly
+            com.realestate.portal.model.Admin updatedAdmin = adminDAO.getById(id);
+            if (updatedAdmin != null) {
+                session.setAttribute("admin", updatedAdmin);
+                User user = new User();
+                user.setId(updatedAdmin.getId());
+                user.setName(updatedAdmin.getName());
+                user.setEmail(updatedAdmin.getEmail());
+                user.setType("ADMIN");
+                session.setAttribute("user", user);
+            }
         } else {
             userDAO.updateUser(id, name, email, password, loggedInUser.getType());
             userDAO.updateProfileDetails(id, phone, address, bio);

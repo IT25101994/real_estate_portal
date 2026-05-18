@@ -89,10 +89,20 @@
         </div>
 
         <c:if test="${not empty param.msg}">
-            <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> ${param.msg}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <c:choose>
+                <c:when test="${param.msg == 'error_unauthorized'}">
+                    <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> Access Denied: Only Super Administrators can delete user accounts.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> ${param.msg}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </c:if>
 
         <div class="table-responsive">
@@ -134,11 +144,13 @@
                             </td>
                             <td class="text-end">
                                 <a href="${pageContext.request.contextPath}/users?action=edit&id=${user.id}" class="btn btn-sm btn-outline-warning rounded-pill px-3 me-1">Edit</a>
-                                <form action="${pageContext.request.contextPath}/users" method="post" class="d-inline">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="${user.id}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Archive this user account?')">Delete</button>
-                                </form>
+                                <c:if test="${sessionScope.admin.canDeleteUsers}">
+                                    <form action="${pageContext.request.contextPath}/users" method="post" class="d-inline">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="${user.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Archive this user account?')">Delete</button>
+                                    </form>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
