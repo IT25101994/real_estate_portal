@@ -48,10 +48,11 @@ public class AdminDAO {
     }
 
     public Admin findByEmail(String email) {
-        String sql = "SELECT * FROM admins WHERE email = ?";
+        if (email == null) return null;
+        String sql = "SELECT * FROM admins WHERE LOWER(email) = LOWER(?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
+            ps.setString(1, email.trim());
             try (ResultSet rs = ps.executeQuery()) { if (rs.next()) return mapRow(rs); }
         } catch (SQLException e) { e.printStackTrace(); }
         return null;
@@ -65,6 +66,33 @@ public class AdminDAO {
             ps.setString(3, role); ps.setInt(4, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); return false; }
+    }
+
+    public boolean updateAdminProfile(int id, String name, String email, String password, String phone, String address, String bio) {
+        boolean hasPassword = (password != null && !password.isBlank());
+        String sql;
+        if (hasPassword) {
+            sql = "UPDATE admins SET name=?, email=?, password=?, contact_phone=?, mailing_address=?, personal_biography=? WHERE id=?";
+        } else {
+            sql = "UPDATE admins SET name=?, email=?, contact_phone=?, mailing_address=?, personal_biography=? WHERE id=?";
+        }
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            int paramIndex = 1;
+            ps.setString(paramIndex++, name);
+            ps.setString(paramIndex++, email);
+            if (hasPassword) {
+                ps.setString(paramIndex++, password);
+            }
+            ps.setString(paramIndex++, phone);
+            ps.setString(paramIndex++, address);
+            ps.setString(paramIndex++, bio);
+            ps.setInt(paramIndex, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteAdmin(int id) {
@@ -110,6 +138,9 @@ public class AdminDAO {
         }
         a.setCreatedAt(rs.getString("created_at"));
         try { a.setProfilePhoto(rs.getString("profile_photo")); } catch(Exception e){}
+        try { a.setContactPhone(rs.getString("contact_phone")); } catch(Exception e){}
+        try { a.setMailingAddress(rs.getString("mailing_address")); } catch(Exception e){}
+        try { a.setPersonalBiography(rs.getString("personal_biography")); } catch(Exception e){}
         return a;
     }
 

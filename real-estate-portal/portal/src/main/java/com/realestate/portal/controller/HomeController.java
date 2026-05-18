@@ -24,8 +24,12 @@ public class HomeController {
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) {
+        User loggedInUser = (User) session.getAttribute("user");
+        if (loggedInUser == null) {
             return "redirect:/";
+        }
+        if ("ADMIN".equalsIgnoreCase(loggedInUser.getType()) || "admin".equalsIgnoreCase(loggedInUser.getType())) {
+            return "redirect:/admins";
         }
         model.addAttribute("properties", propertyDAO.getAllProperties());
         return "home";  // maps to /WEB-INF/views/home.jsp
@@ -49,9 +53,20 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(@RequestParam("role") String role, @RequestParam("email") String email, @RequestParam("password") String password, HttpSession session, Model model) {
+        if (role != null) role = role.trim();
+        if (email != null) email = email.trim();
+        if (password != null) password = password.trim();
+
+        System.out.println("[Login Debug] Login request received for Role: '" + role + "', Email: '" + email + "', Password: '" + password + "'");
+
         if ("ADMIN".equalsIgnoreCase(role)) {
             com.realestate.portal.util.AdminDAO adminDAO = new com.realestate.portal.util.AdminDAO();
             com.realestate.portal.model.Admin admin = adminDAO.findByEmail(email);
+            if (admin != null) {
+                System.out.println("[Login Debug] Admin found in DB: " + admin.getName() + ", DB Password: '" + admin.getPassword() + "'");
+            } else {
+                System.out.println("[Login Debug] No Admin found in DB with Email: '" + email + "'");
+            }
             if (admin != null && admin.getPassword().equals(password)) {
                 session.setAttribute("admin", admin);
                 // Also create a "user" object so existing session checks and shared fields work
@@ -61,10 +76,15 @@ public class HomeController {
                 user.setEmail(admin.getEmail());
                 user.setType("ADMIN");
                 session.setAttribute("user", user);
-                return "redirect:/dashboard";
+                return "redirect:/admins";
             }
         } else {
             User user = userDAO.findByEmail(email);
+            if (user != null) {
+                System.out.println("[Login Debug] User found in DB: " + user.getName() + ", Type: '" + user.getType() + "', DB Password: '" + user.getPassword() + "'");
+            } else {
+                System.out.println("[Login Debug] No User found in DB with Email: '" + email + "'");
+            }
             if (user != null && user.getPassword().equals(password)) {
                 if (!user.getType().equalsIgnoreCase(role)) {
                     model.addAttribute("error", "Access Denied: You are not registered as " + role + ". Your actual role is " + user.getType() + ".");

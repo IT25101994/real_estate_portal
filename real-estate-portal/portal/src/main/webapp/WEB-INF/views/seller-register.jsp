@@ -76,11 +76,6 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6 d-none" id="supervisorField">
-                            <label class="form-label">Assigned Supervisor ID</label>
-                            <input type="number" name="supervisorId" class="form-control-premium w-100" placeholder="Seller ID">
-                        </div>
-
                         <div class="col-12 text-end mt-5">
                             <a href="${pageContext.request.contextPath}/sellers?action=list" class="btn btn-link text-decoration-none text-muted me-3">Back to Directory</a>
                             <button type="submit" class="btn btn-premium px-5">ONBOARD SELLER</button>
@@ -93,16 +88,6 @@
 </div>
 
 <jsp:include page="common/footer.jsp" />
-
-<script>
-    document.querySelector('select[name="tier"]').addEventListener('change', function(e) {
-        if (e.target.value === 'junior') {
-            document.getElementById('supervisorField').classList.remove('d-none');
-        } else {
-            document.getElementById('supervisorField').classList.add('d-none');
-        }
-    });
-</script>
 
 </body>
 </html>

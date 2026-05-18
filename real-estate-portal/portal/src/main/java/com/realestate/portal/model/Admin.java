@@ -9,6 +9,9 @@ public class Admin {
     private String role;
     private String createdAt;
     private String profilePhoto;
+    private String contactPhone;
+    private String mailingAddress;
+    private String personalBiography;
 
     // Constructor
     public Admin() {}
@@ -28,6 +31,12 @@ public class Admin {
     public void   setCreatedAt(String c){ this.createdAt = c; }
     public String getProfilePhoto()             { return profilePhoto; }
     public void   setProfilePhoto(String p)     { this.profilePhoto = p; }
+    public String getContactPhone()             { return contactPhone; }
+    public void   setContactPhone(String c)     { this.contactPhone = c; }
+    public String getMailingAddress()           { return mailingAddress; }
+    public void   setMailingAddress(String m)   { this.mailingAddress = m; }
+    public String getPersonalBiography()        { return personalBiography; }
+    public void   setPersonalBiography(String p) { this.personalBiography = p; }
 
     // Polymorphism
     public boolean isCanDeleteUsers()   { return false; }
