@@ -64,6 +64,10 @@ public class UserPageController {
         switch (action) {
             case "update":
                 userDAO.updateUser(id, name, email, password, type);
+                if ("SELLER".equalsIgnoreCase(type)) {
+                    com.realestate.portal.util.SellerDAO sellerDAO = new com.realestate.portal.util.SellerDAO();
+                    sellerDAO.updateSellerProfile(id, name, null, null, null);
+                }
                 return "redirect:/users?msg=updated";
 
             case "delete":

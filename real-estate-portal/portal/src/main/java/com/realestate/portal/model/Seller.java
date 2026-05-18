@@ -10,6 +10,10 @@ public class Seller {
     private String tier;          // "senior" or "junior"
     private double rating;
     private String createdAt;
+    private String licenseNumber;
+    private String contactPhone;
+    private String mailingAddress;
+    private String personalBiography;
 
     // Constructor
     public Seller() {}
@@ -31,6 +35,14 @@ public class Seller {
     public void   setRating(double r)    { this.rating = r; }
     public String getCreatedAt()         { return createdAt; }
     public void   setCreatedAt(String c) { this.createdAt = c; }
+    public String getLicenseNumber()     { return licenseNumber; }
+    public void   setLicenseNumber(String l) { this.licenseNumber = l; }
+    public String getContactPhone()      { return contactPhone; }
+    public void   setContactPhone(String cp) { this.contactPhone = cp; }
+    public String getMailingAddress()    { return mailingAddress; }
+    public void   setMailingAddress(String ma) { this.mailingAddress = ma; }
+    public String getPersonalBiography() { return personalBiography; }
+    public void   setPersonalBiography(String pb) { this.personalBiography = pb; }
 
     // Polymorphism
     public int getMaxListings() { return 10; }  // default

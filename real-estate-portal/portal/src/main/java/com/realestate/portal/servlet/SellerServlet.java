@@ -56,11 +56,21 @@ public class SellerServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("register".equals(action)) {
+            int userId = Integer.parseInt(req.getParameter("userId"));
+            String userEmail = "";
+            com.realestate.portal.util.UserDAO userDAO = new com.realestate.portal.util.UserDAO();
+            com.realestate.portal.model.User userObj = userDAO.getUserById(userId);
+            if (userObj != null) {
+                userEmail = userObj.getEmail();
+            }
+            String randomLicense = "LIC-" + (100000 + new java.util.Random().nextInt(900000));
             dao.createSeller(
-                Integer.parseInt(req.getParameter("userId")),
+                userId,
                 req.getParameter("agencyName"), req.getParameter("specialization"),
                 req.getParameter("tier"),
-                Double.parseDouble(req.getParameter("rating") == null ? "0" : req.getParameter("rating")));
+                Double.parseDouble(req.getParameter("rating") == null ? "0" : req.getParameter("rating")),
+                randomLicense,
+                null);
             resp.sendRedirect(req.getContextPath() + "/sellers?action=list&msg=registered");
 
         } else if ("update".equals(action)) {
@@ -68,6 +78,11 @@ public class SellerServlet extends HttpServlet {
                             req.getParameter("agencyName"), req.getParameter("specialization"),
                             req.getParameter("tier"));
             resp.sendRedirect(req.getContextPath() + "/sellers?action=list&msg=updated");
+
+        } else if ("delete".equals(action)) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            dao.deleteSeller(id);
+            resp.sendRedirect(req.getContextPath() + "/sellers?action=list&msg=deleted");
         }
     }
 }

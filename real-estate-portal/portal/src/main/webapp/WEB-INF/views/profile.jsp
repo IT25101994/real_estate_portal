@@ -88,6 +88,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </c:if>
+        <c:if test="${param.msg == 'supervisor_connected'}">
+            <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4" role="alert">
+                <i class="bi bi-link-45deg me-2"></i> Successfully connected with the senior supervisor!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
+        <c:if test="${param.msg == 'seller_promoted'}">
+            <div class="alert alert-success alert-dismissible fade show rounded-4 mb-4" role="alert">
+                <i class="bi bi-award-fill me-2"></i> Junior seller has been successfully promoted to Senior Seller!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </c:if>
 
         <div class="row g-5">
             <div class="col-lg-4 text-center profile-sidebar">
@@ -110,12 +122,33 @@
                 </form>
 
                 <h3 class="fw-bold m-0">${userProfile.name}</h3>
-                <p class="text-emerald fw-bold small text-uppercase mb-4">${userProfile.type}</p>
+                <p class="text-emerald fw-bold small text-uppercase mb-4">
+                    <c:choose>
+                        <c:when test="${not empty sellerDetails}">
+                            ${sellerDetails.tier.toUpperCase()} SELLER
+                        </c:when>
+                        <c:otherwise>
+                            ${userProfile.type}
+                        </c:otherwise>
+                    </c:choose>
+                </p>
                 <hr>
                 <div class="text-start mt-4 px-3">
                     <p class="small text-muted mb-2"><i class="bi bi-calendar-check me-2"></i> Joined: <span class="text-dark">${userProfile.createdAt}</span></p>
                     <p class="small text-muted mb-4"><i class="bi bi-shield-lock me-2"></i> Security: <span class="text-dark">Active</span></p>
                 </div>
+                <c:if test="${not empty sellerDetails}">
+                    <hr>
+                    <div class="text-center mt-3">
+                        <h6 class="fw-bold text-uppercase text-muted small mb-3">Seller Tier Status</h6>
+                        <span class="badge ${sellerDetails.tierBadge} fs-6 py-2 px-4 rounded-pill my-2 border">
+                            ${sellerDetails.tier.toUpperCase()} SELLER
+                        </span>
+                        <div class="mt-3 text-muted small">
+                            <i class="bi bi-info-circle me-1"></i> Max Listings: <strong class="text-dark">${sellerDetails.maxListings}</strong>
+                        </div>
+                    </div>
+                </c:if>
             </div>
 
             <div class="col-lg-8">
@@ -134,7 +167,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contact Phone Number</label>
-                            <input type="text" name="phone" class="form-control-premium w-100" value="${userProfile.phone}" placeholder="+1 (234) 567-890"/>
+                            <input type="text" name="phone" class="form-control-premium w-100" value="${not empty sellerDetails ? sellerDetails.contactPhone : userProfile.phone}" placeholder="+1 (234) 567-890"/>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">New Password (Optional)</label>
@@ -142,17 +175,62 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">Physical Mailing Address</label>
-                            <input type="text" name="address" class="form-control-premium w-100" value="${userProfile.address}" placeholder="Street, City, Postal Code"/>
+                            <input type="text" name="address" class="form-control-premium w-100" value="${not empty sellerDetails ? sellerDetails.mailingAddress : userProfile.address}" placeholder="Street, City, Postal Code"/>
                         </div>
+                        
+                        <c:if test="${not empty sellerDetails}">
+                            <div class="col-md-4">
+                                <label class="form-label">Real Estate License Number</label>
+                                <input type="text" name="licenseNumber" class="form-control-premium w-100" value="${sellerDetails.licenseNumber}" required/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Agency Name</label>
+                                <input type="text" name="agencyName" class="form-control-premium w-100" value="${sellerDetails.agencyName}" required/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Specialization</label>
+                                <input type="text" name="specialization" class="form-control-premium w-100" value="${sellerDetails.specialization}" required/>
+                            </div>
+                        </c:if>
+
                         <div class="col-12">
                             <label class="form-label">Personal Biography</label>
-                            <textarea name="bio" class="form-control-premium w-100" rows="4" placeholder="Tell us about yourself...">${userProfile.bio}</textarea>
+                            <textarea name="bio" class="form-control-premium w-100" rows="4" placeholder="Tell us about yourself...">${not empty sellerDetails ? sellerDetails.personalBiography : userProfile.bio}</textarea>
                         </div>
                         <div class="col-12 text-end mt-5">
                             <button type="submit" class="btn btn-premium px-5">UPDATE PROFILE</button>
                         </div>
                     </div>
                 </form>
+                
+                <c:if test="${not empty sellerDetails}">
+                    <div class="border-top pt-5 mt-5">
+                        <h4 class="fw-bold mb-3 text-dark"><i class="bi bi-patch-check-fill me-2 text-emerald"></i>Professional Tier Certification</h4>
+                        <div class="bg-light p-4 rounded-4 border">
+                            <div class="row align-items-center">
+                                <div class="col-md-7">
+                                    <span class="text-muted small d-block">CURRENT PROFESSIONAL TIER:</span>
+                                    <strong class="text-success fs-4 d-flex align-items-center gap-2 mt-1">
+                                        <i class="bi bi-award-fill text-warning"></i>
+                                        <span class="badge ${sellerDetails.tierBadge} fs-6 px-3 py-2 rounded-pill">${sellerDetails.tier.toUpperCase()} SELLER</span>
+                                    </strong>
+                                    <p class="text-muted small mt-3 mb-0">
+                                        <i class="bi bi-shield-lock-fill me-1 text-secondary"></i>
+                                        <strong>Administration Policy:</strong> Only system administrators are authorized to change or upgrade a seller's tier. If you require a status change (e.g. from Junior to Senior), please contact support.
+                                    </p>
+                                </div>
+                                <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                                    <div class="bg-white p-3 rounded-3 border d-inline-block text-start shadow-sm">
+                                        <span class="text-muted small d-block">ACCOUNT LIMITATIONS:</span>
+                                        <div class="mt-2 text-dark font-premium">
+                                            <i class="bi bi-house-check-fill text-emerald me-2"></i>Max Listings: <strong>${sellerDetails.maxListings}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>

@@ -37,9 +37,19 @@ public class ProfileController {
                 refreshedUser.setType("ADMIN");
                 refreshedUser.setCreatedAt(admin.getCreatedAt());
                 refreshedUser.setProfilePhoto(admin.getProfilePhoto());
+                refreshedUser.setPhone(admin.getContactPhone());
+                refreshedUser.setAddress(admin.getMailingAddress());
+                refreshedUser.setBio(admin.getPersonalBiography());
             }
         } else {
             refreshedUser = userDAO.getUserById(loggedInUser.getId());
+            if (refreshedUser != null && "SELLER".equalsIgnoreCase(refreshedUser.getType())) {
+                com.realestate.portal.util.SellerDAO sellerDAO = new com.realestate.portal.util.SellerDAO();
+                com.realestate.portal.model.Seller seller = sellerDAO.getByUserId(refreshedUser.getId());
+                if (seller != null) {
+                    model.addAttribute("sellerDetails", seller);
+                }
+            }
         }
 
         if (refreshedUser != null) {
@@ -60,6 +70,9 @@ public class ProfileController {
             @RequestParam(value = "phone", required = false) String phone,
             @RequestParam(value = "address", required = false) String address,
             @RequestParam(value = "bio", required = false) String bio,
+            @RequestParam(value = "licenseNumber", required = false) String licenseNumber,
+            @RequestParam(value = "agencyName", required = false) String agencyName,
+            @RequestParam(value = "specialization", required = false) String specialization,
             HttpSession session) {
 
         User loggedInUser = (User) session.getAttribute("user");
@@ -70,8 +83,15 @@ public class ProfileController {
         if ("ADMIN".equalsIgnoreCase(loggedInUser.getType()) || "admin".equalsIgnoreCase(loggedInUser.getType())) {
             com.realestate.portal.util.AdminDAO adminDAO = new com.realestate.portal.util.AdminDAO();
             com.realestate.portal.model.Admin loggedInAdmin = (com.realestate.portal.model.Admin) session.getAttribute("admin");
-            String role = (loggedInAdmin != null) ? loggedInAdmin.getRole() : "moderator";
-            adminDAO.updateAdmin(id, name, email, role);
+            
+            // Update admin details in admins table (including password and contact info)
+            adminDAO.updateAdminProfile(id, name, email, password, phone, address, bio);
+            
+            // If admin has a corresponding row in users table, update it too
+            if (userDAO.getUserById(id) != null) {
+                userDAO.updateUser(id, name, email, password, "admin");
+                userDAO.updateProfileDetails(id, phone, address, bio);
+            }
             
             // Refresh session attributes to reflect the updated details instantly
             com.realestate.portal.model.Admin updatedAdmin = adminDAO.getById(id);
@@ -82,11 +102,20 @@ public class ProfileController {
                 user.setName(updatedAdmin.getName());
                 user.setEmail(updatedAdmin.getEmail());
                 user.setType("ADMIN");
+                user.setPhone(updatedAdmin.getContactPhone());
+                user.setAddress(updatedAdmin.getMailingAddress());
+                user.setBio(updatedAdmin.getPersonalBiography());
                 session.setAttribute("user", user);
             }
         } else {
             userDAO.updateUser(id, name, email, password, loggedInUser.getType());
             userDAO.updateProfileDetails(id, phone, address, bio);
+            
+            // Synchronize details to the sellers table if the user is a seller
+            if ("seller".equalsIgnoreCase(loggedInUser.getType())) {
+                com.realestate.portal.util.SellerDAO sellerDAO = new com.realestate.portal.util.SellerDAO();
+                sellerDAO.updateSellerProfileWithDetails(id, name, phone, address, bio, licenseNumber, agencyName, specialization);
+            }
         }
         
         return "redirect:/profile?msg=updated";
